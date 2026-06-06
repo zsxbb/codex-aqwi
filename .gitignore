@@ -1,0 +1,19 @@
+# Visual Studio & Rider build folders
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+
+# User-specific settings & configurations
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+.vs/
+.idea/
+.vscode/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini

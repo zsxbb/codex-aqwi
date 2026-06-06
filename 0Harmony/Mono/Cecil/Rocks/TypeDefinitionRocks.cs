@@ -1,0 +1,65 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Mono.Cecil.Rocks
+{
+	internal static class TypeDefinitionRocks
+	{
+		public static IEnumerable<MethodDefinition> GetConstructors(this TypeDefinition self)
+		{
+			if (self == null)
+			{
+				throw new ArgumentNullException("self");
+			}
+			if (!self.HasMethods)
+			{
+				return Empty<MethodDefinition>.Array;
+			}
+			return from method in self.Methods
+			where method.IsConstructor
+			select method;
+		}
+
+		public static MethodDefinition GetStaticConstructor(this TypeDefinition self)
+		{
+			if (self == null)
+			{
+				throw new ArgumentNullException("self");
+			}
+			if (!self.HasMethods)
+			{
+				return null;
+			}
+			return self.GetConstructors().FirstOrDefault((MethodDefinition ctor) => ctor.IsStatic);
+		}
+
+		public static IEnumerable<MethodDefinition> GetMethods(this TypeDefinition self)
+		{
+			if (self == null)
+			{
+				throw new ArgumentNullException("self");
+			}
+			if (!self.HasMethods)
+			{
+				return Empty<MethodDefinition>.Array;
+			}
+			return from method in self.Methods
+			where !method.IsConstructor
+			select method;
+		}
+
+		public static TypeReference GetEnumUnderlyingType(this TypeDefinition self)
+		{
+			if (self == null)
+			{
+				throw new ArgumentNullException("self");
+			}
+			if (!self.IsEnum)
+			{
+				throw new ArgumentException();
+			}
+			return self.GetEnumUnderlyingType();
+		}
+	}
+}

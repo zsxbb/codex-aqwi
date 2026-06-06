@@ -1,0 +1,48 @@
+Daftar Endpoint Web API AQW Infinity (Content Environment)
+==========================================================
+
+Base URL: https://contentinf.aq.com/game/api/
+
+1. HTTP GET (Bisa diakses langsung dari Browser)
+-----------------------------------------------
+* Variabel Global Game (InfinityVars):
+  https://contentinf.aq.com/game/api/Data/InfinityVars
+
+* List Class Karakter Dasar (GetBaseClasses):
+  https://contentinf.aq.com/game/api/Data/GetBaseClasses
+
+* Mengecek Ketersediaan Nama Karakter (NewUserValidateNameNow):
+  https://contentinf.aq.com/game/api/Login/NewUserValidateNameNow?name=[Nama]
+  Contoh: https://contentinf.aq.com/game/api/Login/NewUserValidateNameNow?name=Alex
+
+* Detail Data Monster Statis (GetMonsterData):
+  https://contentinf.aq.com/game/api/data/GetMonsterData?ids=[ID_Monster]
+  Contoh: https://contentinf.aq.com/game/api/data/GetMonsterData?ids=1
+
+* Detail Data Soundtrack Lagu (getsoundtracks):
+  https://contentinf.aq.com/game/api/data/getsoundtracks?ids=[ID_Soundtrack]
+  Contoh: https://contentinf.aq.com/game/api/data/getsoundtracks?ids=1
+
+* Daftar Server (Servers):
+  https://contentinf.aq.com/game/api/data/Servers?flavor=2
+
+
+2. HTTP POST (Membutuhkan Parameter / payload JSON)
+---------------------------------------------------
+* Otentikasi Login Akun (login/nowinfinity):
+  https://contentinf.aq.com/game/api/login/nowinfinity
+  Payload: user, pass, option, infinityVersion
+
+* Mengambil Link Unduh Asset Bundle (GetAssetBundlesByIDs):
+  https://contentinf.aq.com/game/api/data/GetAssetBundlesByIDs
+  Payload: List ID Asset
+
+* Validasi Resi Pembelian Mobile (ValidateReceipt):
+  https://contentinf.aq.com/game/api/Mobile/ValidateReceipt
+
+
+3. Endpoint Internal Developer / Tweak (Dev Mode Only)
+------------------------------------------------------
+* https://contentinf.aq.com/game/api/tweak/DialoggerLoad
+* https://contentinf.aq.com/game/api/tweak/DialoggerSave
+* https://contentinf.aq.com/game/api/tweak/CreateNewApop
