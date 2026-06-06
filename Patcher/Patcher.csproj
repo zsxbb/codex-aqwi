@@ -15,4 +15,9 @@
   <ItemGroup>
     <PackageReference Include="Mono.Cecil" Version="0.11.5" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\AutoAttackTrainer\bin\Release\netstandard2.1\AutoAttackTrainer.dll" Link="Resources\AutoAttackTrainer.dll" />
+    <EmbeddedResource Include="..\AutoAttackTrainer\bin\Release\netstandard2.1\0Harmony.dll" Link="Resources\0Harmony.dll" />
+  </ItemGroup>
 </Project>

@@ -17,18 +17,21 @@ class Program
         string currentDir = AppDomain.CurrentDomain.BaseDirectory;
         string trainerSrcPath = Path.Combine(currentDir, "AutoAttackTrainer.dll");
 
-        if (!File.Exists(trainerSrcPath))
+        if (!File.Exists(trainerSrcPath) && !HasEmbeddedFile("AutoAttackTrainer.dll"))
         {
             // If running in development environment, fall back to project build directory
-            string devPath = Path.GetFullPath(Path.Combine(currentDir, "..", "..", "..", "..", "AutoAttackTrainer", "bin", "Debug", "netstandard2.1", "AutoAttackTrainer.dll"));
+            string devPath = Path.GetFullPath(Path.Combine(currentDir, "..", "..", "..", "..", "AutoAttackTrainer", "bin", "Release", "netstandard2.1", "AutoAttackTrainer.dll"));
+            if (!File.Exists(devPath))
+            {
+                devPath = Path.GetFullPath(Path.Combine(currentDir, "..", "..", "..", "..", "AutoAttackTrainer", "bin", "Debug", "netstandard2.1", "AutoAttackTrainer.dll"));
+            }
             if (File.Exists(devPath))
             {
                 trainerSrcPath = devPath;
             }
             else
             {
-                Console.WriteLine($"[Error] AutoAttackTrainer.dll not found in the patcher folder.");
-                Console.WriteLine($"Please place AutoAttackTrainer.dll in the same folder as this patcher.");
+                Console.WriteLine($"[Error] AutoAttackTrainer.dll not found in the patcher folder or embedded resources.");
                 Console.WriteLine("Press any key to exit...");
                 Console.ReadKey();
                 return;
@@ -83,14 +86,40 @@ class Program
 
         try
         {
-            // 3. Copy AutoAttackTrainer.dll to target directory
-            Console.WriteLine($"[Codex Patcher] Deploying AutoAttackTrainer.dll to game folder...");
-            File.Copy(trainerSrcPath, trainerDestPath, true);
-
-            if (File.Exists(harmonySrcPath))
+            // 3. Extract and Deploy AutoAttackTrainer.dll and 0Harmony.dll to target directory
+            bool deployedTrainer = ExtractEmbeddedFile("AutoAttackTrainer.dll", trainerDestPath);
+            if (deployedTrainer)
             {
-                Console.WriteLine($"[Codex Patcher] Deploying 0Harmony.dll to game folder...");
-                File.Copy(harmonySrcPath, harmonyDestPath, true);
+                Console.WriteLine($"[Codex Patcher] Extracted and deployed AutoAttackTrainer.dll directly to game folder.");
+            }
+            else
+            {
+                if (File.Exists(trainerSrcPath))
+                {
+                    Console.WriteLine($"[Codex Patcher] Deploying AutoAttackTrainer.dll from local file...");
+                    File.Copy(trainerSrcPath, trainerDestPath, true);
+                }
+                else
+                {
+                    Console.WriteLine($"[Error] AutoAttackTrainer.dll could not be extracted or found locally.");
+                    Console.WriteLine("Press any key to exit...");
+                    Console.ReadKey();
+                    return;
+                }
+            }
+
+            bool deployedHarmony = ExtractEmbeddedFile("0Harmony.dll", harmonyDestPath);
+            if (deployedHarmony)
+            {
+                Console.WriteLine($"[Codex Patcher] Extracted and deployed 0Harmony.dll directly to game folder.");
+            }
+            else
+            {
+                if (File.Exists(harmonySrcPath))
+                {
+                    Console.WriteLine($"[Codex Patcher] Deploying 0Harmony.dll from local file...");
+                    File.Copy(harmonySrcPath, harmonyDestPath, true);
+                }
             }
 
             var readerParameters = new ReaderParameters
@@ -232,5 +261,42 @@ class Program
 
         Console.WriteLine("\nPress any key to exit...");
         Console.ReadKey();
+    }
+
+    static bool HasEmbeddedFile(string filename)
+    {
+        var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+        return assembly.GetManifestResourceNames()
+            .Any(name => name.EndsWith(filename, StringComparison.OrdinalIgnoreCase));
+    }
+
+    static bool ExtractEmbeddedFile(string filename, string outputPath)
+    {
+        try
+        {
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            string resourceName = assembly.GetManifestResourceNames()
+                .FirstOrDefault(name => name.EndsWith(filename, StringComparison.OrdinalIgnoreCase));
+
+            if (resourceName != null)
+            {
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                {
+                    if (stream != null)
+                    {
+                        using (FileStream fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                        {
+                            stream.CopyTo(fileStream);
+                        }
+                        return true;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Warning] Failed to extract embedded {filename}: {ex.Message}");
+        }
+        return false;
     }
 }
