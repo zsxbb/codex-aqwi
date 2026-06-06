@@ -4,6 +4,12 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Version>2.0.0</Version>
+    <Authors>zsxbb</Authors>
+    <Company>Codex Team</Company>
+    <Product>Codex Trainer Patcher</Product>
+    <Description>Dynamic patcher and hook injector for AdventureQuest Worlds Infinity.</Description>
+    <Copyright>Copyright © 2026 Codex Team</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
