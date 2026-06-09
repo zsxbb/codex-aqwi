@@ -12,8 +12,12 @@
 .vs/
 .idea/
 .vscode/
+.env
 
 # OS-specific files
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Generated config
+Config.g.cs

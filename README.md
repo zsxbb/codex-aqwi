@@ -17,18 +17,33 @@ Repositori ini terdiri dari beberapa proyek C# berikut:
 
 ## 🚀 Panduan Penggunaan (Untuk Pemain)
 
-Jika Anda hanya ingin menggunakan trainer ini tanpa melakukan kompilasi ulang:
+Jika Anda hanya ingin menggunakan trainer ini tanpa melakukan kompilasi ulang, terdapat dua cara:
 
+### Metode A: Menggunakan Installer Otomatis (Direkomendasikan)
+1. Buka folder **`Publish`** (atau unduh rilisan terbaru).
+2. Pastikan game AdventureQuest Worlds Infinity di Steam dalam keadaan **tertutup / tidak berjalan**.
+3. Jalankan **`CodexSetup.exe`**.
+4. Ikuti panduan instalasi di layar. Installer akan secara otomatis mendeteksi lokasi game Anda melalui Registry Steam.
+5. Klik **Install**, dan installer akan menyalin file serta menambal (patch) game secara otomatis di latar belakang.
+6. Untuk menghapus trainer, Anda cukup melakukan uninstall melalui **Windows Settings > Apps** atau **Control Panel** seperti aplikasi biasa. Game Anda akan otomatis pulih ke keadaan semula tanpa mod.
+
+### Metode B: Menggunakan Patcher Manual (Cadangan)
 1. Buka folder **`Publish`** (atau unduh rilisan terbaru).
 2. Pastikan game AdventureQuest Worlds Infinity di Steam dalam keadaan **tertutup / tidak berjalan**.
 3. Jalankan **`Patcher.exe`**.
 4. Patcher akan mencoba mencari folder `Managed` game secara otomatis di direktori instalasi Steam standar:
    `C:\Program Files (x86)\Steam\steamapps\common\AdventureQuest Worlds Unity Playtest\AdventureQuest Worlds Infinity_Data\Managed`
 5. Jika folder game berada di lokasi lain, salin alamat folder `Managed` game Anda dan tempel (*paste*) ke jendela Patcher, lalu tekan **Enter**.
-6. Patcher akan menyalin `AutoAttackTrainer.dll`, `0Harmony.dll`, membuat cadangan `Assembly-CSharp.dll.bak`, dan memodifikasi file `Assembly-CSharp.dll` yang asli.
-7. Buka game, login ke karakter Anda, masuk ke dalam room, lalu ketik **`/codex`** pada kolom obrolan (chat) untuk membuka menu.
-8. Pada pembukaan pertama, Anda akan diminta memasukkan **Activation Key**. Kirimkan *username* Anda kepada penyedia mod untuk mendapatkan kunci 5-digit tersebut.
-9. Masukkan kunci aktivasi tersebut, dan seluruh fitur trainer (seperti Auto Attack, Infinite Range, UI Control, dll.) akan langsung terbuka.
+6. Patcher akan menyalin file, membuat cadangan `Assembly-CSharp.dll.bak`, dan memodifikasi file `Assembly-CSharp.dll` yang asli.
+
+---
+
+### Cara Mengaktifkan Trainer (Setelah Pemasangan)
+1. Buka game, login ke karakter Anda, masuk ke dalam room, lalu ketik **`/codex`** pada kolom obrolan (chat) untuk membuka menu.
+2. Pada pembukaan pertama, Anda akan melihat status "Activation Required" beserta Username akun Anda.
+3. Kirimkan Username tersebut kepada pembuat/penyedia mod untuk mendapatkan 5-Digit Activation Key Anda.
+4. Masukkan Activation Key di kotak input yang tersedia, dan menu trainer akan langsung terbuka.
+
 
 ---
 

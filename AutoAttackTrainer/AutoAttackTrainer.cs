@@ -8,10 +8,17 @@ using Pixelplacement;
 using UnityEngine;
 using HarmonyLib;
 
+// Token: 0x02000006 RID: 6
 public class AutoAttackTrainer : MonoBehaviour
 {
+	// Token: 0x17000001 RID: 1
+	// (get) Token: 0x06000006 RID: 6 RVA: 0x000020A2 File Offset: 0x000002A2
+	// (set) Token: 0x06000007 RID: 7 RVA: 0x000020A9 File Offset: 0x000002A9
 	public static AutoAttackTrainer Instance { get; private set; }
 
+	// Token: 0x17000002 RID: 2
+	// (get) Token: 0x06000008 RID: 8 RVA: 0x000020B4 File Offset: 0x000002B4
+	// (set) Token: 0x06000009 RID: 9 RVA: 0x000020CC File Offset: 0x000002CC
 	public bool isEnabled
 	{
 		get
@@ -33,6 +40,7 @@ public class AutoAttackTrainer : MonoBehaviour
 		}
 	}
 
+	// Token: 0x0600000A RID: 10 RVA: 0x0000210C File Offset: 0x0000030C
 	private void ResetAllFeatures()
 	{
 		this.autoTarget = false;
@@ -49,6 +57,9 @@ public class AutoAttackTrainer : MonoBehaviour
 		this.noclip = false;
 	}
 
+	// Token: 0x17000003 RID: 3
+	// (get) Token: 0x0600000B RID: 11 RVA: 0x00002164 File Offset: 0x00000364
+	// (set) Token: 0x0600000C RID: 12 RVA: 0x0000217C File Offset: 0x0000037C
 	public bool maidEnabled
 	{
 		get
@@ -70,6 +81,9 @@ public class AutoAttackTrainer : MonoBehaviour
 		}
 	}
 
+	// Token: 0x17000004 RID: 4
+	// (get) Token: 0x0600000D RID: 13 RVA: 0x000021BC File Offset: 0x000003BC
+	// (set) Token: 0x0600000E RID: 14 RVA: 0x000021D4 File Offset: 0x000003D4
 	public bool maidActive
 	{
 		get
@@ -91,6 +105,7 @@ public class AutoAttackTrainer : MonoBehaviour
 		}
 	}
 
+	// Token: 0x0600000F RID: 15 RVA: 0x00002214 File Offset: 0x00000414
 	private void Awake()
 	{
 		bool flag = AutoAttackTrainer.Instance == null;
@@ -98,6 +113,8 @@ public class AutoAttackTrainer : MonoBehaviour
 		{
 			AutoAttackTrainer.Instance = this;
 			UnityEngine.Object.DontDestroyOnLoad(base.gameObject);
+			Loom.Initialize();
+			base.gameObject.AddComponent<VoiceChatManager>();
 			try
 			{
 				var harmony = new Harmony("com.codex.trainer");
@@ -133,12 +150,14 @@ public class AutoAttackTrainer : MonoBehaviour
 		}
 	}
 
+	// Token: 0x06000010 RID: 16 RVA: 0x0000232C File Offset: 0x0000052C
 	private void Start()
 	{
 		this.activationKey = PlayerPrefs.GetString("Codex_ActivationKey", "");
 		this.trainerCoroutine = base.StartCoroutine(this.TrainerLoop());
 	}
 
+	// Token: 0x06000011 RID: 17 RVA: 0x00002344 File Offset: 0x00000544
 	private void Update()
 	{
 		bool flag = Input.GetKeyDown(KeyCode.F11);
@@ -152,6 +171,7 @@ public class AutoAttackTrainer : MonoBehaviour
 		}
 	}
 
+	// Token: 0x06000012 RID: 18 RVA: 0x00002378 File Offset: 0x00000578
 	public void ToggleMenu()
 	{
 		this.showMenu = !this.showMenu;
@@ -196,6 +216,7 @@ public class AutoAttackTrainer : MonoBehaviour
 		return Instance != null && Instance.infiniteRange && src != null && src.isMainPlayer;
 	}
 
+	// Token: 0x06000013 RID: 19 RVA: 0x000023C5 File Offset: 0x000005C5
 	private IEnumerator TrainerLoop()
 	{
 		for (;;)
@@ -321,6 +342,7 @@ public class AutoAttackTrainer : MonoBehaviour
 		}
 	}
 
+	// Token: 0x06000014 RID: 20 RVA: 0x000023D4 File Offset: 0x000005D4
 	private void TargetMonster(Player mainPlayer)
 	{
 		bool flag = Area.currentArea == null || Area.currentArea.Monsters == null;
@@ -394,6 +416,7 @@ public class AutoAttackTrainer : MonoBehaviour
 		}
 	}
 
+	// Token: 0x06000015 RID: 21 RVA: 0x00002600 File Offset: 0x00000800
 	private void CheckAndMoveToTarget(Player mainPlayer)
 	{
 		Entity target = mainPlayer.target;
@@ -421,6 +444,7 @@ public class AutoAttackTrainer : MonoBehaviour
 	}
 
 
+	// Token: 0x06000016 RID: 22 RVA: 0x000026A4 File Offset: 0x000008A4
 	private void UseSkillIfReady(int slotNum)
 	{
 		UISkillSlots instance = Singleton<UISkillSlots>.Instance;
@@ -444,6 +468,7 @@ public class AutoAttackTrainer : MonoBehaviour
 		}
 	}
 
+	// Token: 0x06000017 RID: 23 RVA: 0x00002738 File Offset: 0x00000938
 	private void AutoLootDrops()
 	{
 		try
@@ -522,6 +547,7 @@ public class AutoAttackTrainer : MonoBehaviour
 		}
 	}
 
+	// Token: 0x06000018 RID: 24 RVA: 0x000028CC File Offset: 0x00000ACC
 	private void OnGUI()
 	{
 		bool flag = !this.showMenu;
@@ -563,8 +589,15 @@ public class AutoAttackTrainer : MonoBehaviour
 			}
 			if (this.isMinimized)
 			{
-				this.windowRect.width = 150f;
-				this.windowRect.height = 60f;
+				this.windowRect.width = 160f;
+				if (VoiceChatManager.Instance != null && VoiceChatManager.Instance.voiceEnabled)
+				{
+					this.windowRect.height = 90f;
+				}
+				else
+				{
+					this.windowRect.height = 55f;
+				}
 			}
 			else
 			{
@@ -586,19 +619,34 @@ public class AutoAttackTrainer : MonoBehaviour
 		}
 	}
 
+	// Token: 0x06000019 RID: 25 RVA: 0x00002AB0 File Offset: 0x00000CB0
 	private void DrawWindow(int windowID)
 	{
-		GUI.DragWindow(new Rect(0f, 0f, this.windowRect.width, 25f));
 		GUILayout.Space(10f);
 
 		if (this.isMinimized)
 		{
-			if (GUILayout.Button("<b><color=green>Expand Codex</color></b>", Array.Empty<GUILayoutOption>()))
+			GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
+			if (GUILayout.Button("<b><color=green>Expand</color></b>", GUILayout.Height(20f)))
 			{
 				this.isMinimized = false;
 				this.windowRect.width = this.windowWidth;
 				this.windowRect.height = this.windowHeight;
 			}
+			GUILayout.EndHorizontal();
+
+			if (VoiceChatManager.Instance != null && VoiceChatManager.Instance.voiceEnabled)
+			{
+				GUILayout.Space(2f);
+				GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
+				bool newMute = GUILayout.Toggle(VoiceChatManager.Instance.isMuted, " Mute", Array.Empty<GUILayoutOption>());
+				if (newMute != VoiceChatManager.Instance.isMuted) VoiceChatManager.Instance.isMuted = newMute;
+
+				bool newDeafen = GUILayout.Toggle(VoiceChatManager.Instance.isDeafened, " Deafen", Array.Empty<GUILayoutOption>());
+				if (newDeafen != VoiceChatManager.Instance.isDeafened) VoiceChatManager.Instance.isDeafened = newDeafen;
+				GUILayout.EndHorizontal();
+			}
+			GUI.DragWindow();
 			return;
 		}
 
@@ -624,6 +672,7 @@ public class AutoAttackTrainer : MonoBehaviour
 				GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
 				GUILayout.Label("Key:", new GUILayoutOption[] { GUILayout.Width(40f) });
 				string newKey = GUILayout.TextField(this.activationKey, 5, Array.Empty<GUILayoutOption>());
+				if (Event.current.type == EventType.Repaint) this.activationKeyRect = GUILayoutUtility.GetLastRect();
 				if (newKey != this.activationKey)
 				{
 					this.activationKey = newKey.Trim();
@@ -666,8 +715,15 @@ public class AutoAttackTrainer : MonoBehaviour
 		if (GUILayout.Button("<b><color=yellow>Minimize</color></b>", GUILayout.Width(75f), GUILayout.Height(20f)))
 		{
 			this.isMinimized = true;
-			this.windowRect.width = 150f;
-			this.windowRect.height = 60f;
+			this.windowRect.width = 160f;
+			if (VoiceChatManager.Instance != null && VoiceChatManager.Instance.voiceEnabled)
+			{
+				this.windowRect.height = 90f;
+			}
+			else
+			{
+				this.windowRect.height = 55f;
+			}
 		}
 		GUILayout.EndHorizontal();
 		string text2 = "Target: <color=yellow>None</color>";
@@ -687,186 +743,316 @@ public class AutoAttackTrainer : MonoBehaviour
 			GUILayout.Height(20f)
 		});
 		GUILayout.Space(10f);
-		this.isEnabled = GUILayout.Toggle(this.isEnabled, "  <b><color=green>ENABLE Codex</color></b>", Array.Empty<GUILayoutOption>());
+
+		// Pagination Tab Selector
+		GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
+		if (GUILayout.Button(this.currentTab == 0 ? "<b><color=lime>Codex Cheats</color></b>" : "Codex Cheats", GUILayout.Height(22f))) this.currentTab = 0;
+		if (GUILayout.Button(this.currentTab == 1 ? "<b><color=lime>Voice Chat</color></b>" : "Voice Chat", GUILayout.Height(22f))) this.currentTab = 1;
+		if (GUILayout.Button(this.currentTab == 2 ? "<b><color=lime>Dev Card</color></b>" : "Dev Card", GUILayout.Height(22f))) this.currentTab = 2;
+		GUILayout.EndHorizontal();
 		GUILayout.Space(5f);
-		GUI.enabled = this.isEnabled;
-		this.autoTarget = GUILayout.Toggle(this.autoTarget, "  Auto Target Monster", Array.Empty<GUILayoutOption>());
-		bool flag3 = this.autoTarget;
-		if (flag3)
+
+		if (this.currentTab == 0)
 		{
-			GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
-			GUILayout.Space(20f);
-			bool flag4 = !this.targetByName;
-			bool flag5 = this.targetByName;
-			bool flag6 = GUILayout.Toggle(flag4, "Nearest", Array.Empty<GUILayoutOption>());
-			bool flag7 = GUILayout.Toggle(flag5, "Keyword", Array.Empty<GUILayoutOption>());
-			bool flag8 = flag6 != flag4;
-			if (flag8)
-			{
-				this.targetByName = !flag6;
-			}
-			else
-			{
-				bool flag9 = flag7 != flag5;
-				if (flag9)
-				{
-					this.targetByName = flag7;
-				}
-			}
-			GUILayout.EndHorizontal();
-			bool flag10 = this.targetByName;
-			if (flag10)
+			this.isEnabled = GUILayout.Toggle(this.isEnabled, "  <b><color=green>ENABLE Codex</color></b>", Array.Empty<GUILayoutOption>());
+			GUILayout.Space(5f);
+			GUI.enabled = this.isEnabled;
+			this.autoTarget = GUILayout.Toggle(this.autoTarget, "  Auto Target Monster", Array.Empty<GUILayoutOption>());
+			bool flag3 = this.autoTarget;
+			if (flag3)
 			{
 				GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
 				GUILayout.Space(20f);
-				GUILayout.Label("Keywords:", new GUILayoutOption[]
+				bool flag4 = !this.targetByName;
+				bool flag5 = this.targetByName;
+				bool flag6 = GUILayout.Toggle(flag4, "Nearest", Array.Empty<GUILayoutOption>());
+				bool flag7 = GUILayout.Toggle(flag5, "Keyword", Array.Empty<GUILayoutOption>());
+				bool flag8 = flag6 != flag4;
+				if (flag8)
 				{
-					GUILayout.Width(80f)
-				});
-				this.targetSearchNames = GUILayout.TextField(this.targetSearchNames, Array.Empty<GUILayoutOption>());
+					this.targetByName = !flag6;
+				}
+				else
+				{
+					bool flag9 = flag7 != flag5;
+					if (flag9)
+					{
+						this.targetByName = flag7;
+					}
+				}
 				GUILayout.EndHorizontal();
-			}
-		}
-		this.autoMove = GUILayout.Toggle(this.autoMove, "  Auto Charge to Target", Array.Empty<GUILayoutOption>());
-		bool combinedAuto = this.autoAttackSlot0 || this.autoSkills;
-		bool newCombinedAuto = GUILayout.Toggle(combinedAuto, "  Auto Attack", Array.Empty<GUILayoutOption>());
-		if (newCombinedAuto != combinedAuto)
-		{
-			this.autoAttackSlot0 = newCombinedAuto;
-			this.autoSkills = newCombinedAuto;
-		}
-		this.infiniteRange = GUILayout.Toggle(this.infiniteRange, "  Infinite Range", Array.Empty<GUILayoutOption>());
-		this.keepCellOnDeath = GUILayout.Toggle(this.keepCellOnDeath, "  Death-Respawn Cell", Array.Empty<GUILayoutOption>());
-		GUILayout.Space(5f);
-		GUILayout.Label("<b>Loot Settings:</b>", Array.Empty<GUILayoutOption>());
-		this.autoLoot = GUILayout.Toggle(this.autoLoot, "  Auto Loot Drops", Array.Empty<GUILayoutOption>());
-		bool flag11 = this.autoLoot;
-		if (flag11)
-		{
-			GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
-			GUILayout.Space(20f);
-			bool flag12 = this.lootMode == AutoAttackTrainer.LootMode.SelectDrop;
-			bool flag13 = this.lootMode == AutoAttackTrainer.LootMode.AllDrop;
-			bool flag14 = GUILayout.Toggle(flag12, "SELECT DROP", Array.Empty<GUILayoutOption>());
-			bool flag15 = GUILayout.Toggle(flag13, "ALL DROP", Array.Empty<GUILayoutOption>());
-			bool flag16 = flag14 && !flag12;
-			if (flag16)
-			{
-				this.lootMode = AutoAttackTrainer.LootMode.SelectDrop;
-			}
-			else
-			{
-				bool flag17 = !flag14 && flag12;
-				if (flag17)
+				bool flag10 = this.targetByName;
+				if (flag10)
 				{
-					this.lootMode = AutoAttackTrainer.LootMode.None;
+					GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
+					GUILayout.Space(20f);
+					GUILayout.Label("Keywords:", new GUILayoutOption[]
+					{
+						GUILayout.Width(80f)
+					});
+					this.targetSearchNames = GUILayout.TextField(this.targetSearchNames, Array.Empty<GUILayoutOption>());
+					if (Event.current.type == EventType.Repaint) this.targetSearchRect = GUILayoutUtility.GetLastRect();
+					GUILayout.EndHorizontal();
 				}
 			}
-			bool flag18 = flag15 && !flag13;
-			if (flag18)
+			this.autoMove = GUILayout.Toggle(this.autoMove, "  Auto Charge to Target", Array.Empty<GUILayoutOption>());
+			bool combinedAuto = this.autoAttackSlot0 || this.autoSkills;
+			bool newCombinedAuto = GUILayout.Toggle(combinedAuto, "  Auto Attack", Array.Empty<GUILayoutOption>());
+			if (newCombinedAuto != combinedAuto)
 			{
-				this.lootMode = AutoAttackTrainer.LootMode.AllDrop;
+				this.autoAttackSlot0 = newCombinedAuto;
+				this.autoSkills = newCombinedAuto;
 			}
-			else
-			{
-				bool flag19 = !flag15 && flag13;
-				if (flag19)
-				{
-					this.lootMode = AutoAttackTrainer.LootMode.None;
-				}
-			}
-			GUILayout.EndHorizontal();
-			bool flag20 = this.lootMode == AutoAttackTrainer.LootMode.SelectDrop;
-			if (flag20)
+			this.infiniteRange = GUILayout.Toggle(this.infiniteRange, "  Infinite Range", Array.Empty<GUILayoutOption>());
+			this.keepCellOnDeath = GUILayout.Toggle(this.keepCellOnDeath, "  Death-Respawn Cell", Array.Empty<GUILayoutOption>());
+			GUILayout.Space(5f);
+			GUILayout.Label("<b>Loot Settings:</b>", Array.Empty<GUILayoutOption>());
+			this.autoLoot = GUILayout.Toggle(this.autoLoot, "  Auto Loot Drops", Array.Empty<GUILayoutOption>());
+			bool flag11 = this.autoLoot;
+			if (flag11)
 			{
 				GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
 				GUILayout.Space(20f);
-				GUILayout.Label("Keywords:", new GUILayoutOption[]
+				bool flag12 = this.lootMode == AutoAttackTrainer.LootMode.SelectDrop;
+				bool flag13 = this.lootMode == AutoAttackTrainer.LootMode.AllDrop;
+				bool flag14 = GUILayout.Toggle(flag12, "SELECT DROP", Array.Empty<GUILayoutOption>());
+				bool flag15 = GUILayout.Toggle(flag13, "ALL DROP", Array.Empty<GUILayoutOption>());
+				bool flag16 = flag14 && !flag12;
+				if (flag16)
 				{
-					GUILayout.Width(100f)
+					this.lootMode = AutoAttackTrainer.LootMode.SelectDrop;
+				}
+				else
+				{
+					bool flag17 = !flag14 && flag12;
+					if (flag17)
+					{
+						this.lootMode = AutoAttackTrainer.LootMode.None;
+					}
+				}
+				bool flag18 = flag15 && !flag13;
+				if (flag18)
+				{
+					this.lootMode = AutoAttackTrainer.LootMode.AllDrop;
+				}
+				else
+				{
+					bool flag19 = !flag15 && flag13;
+					if (flag19)
+					{
+						this.lootMode = AutoAttackTrainer.LootMode.None;
+					}
+				}
+				GUILayout.EndHorizontal();
+				bool flag20 = this.lootMode == AutoAttackTrainer.LootMode.SelectDrop;
+				if (flag20)
+				{
+					GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
+					GUILayout.Space(20f);
+					GUILayout.Label("Keywords:", new GUILayoutOption[]
+					{
+						GUILayout.Width(100f)
+					});
+					this.lootSearchNames = GUILayout.TextField(this.lootSearchNames, Array.Empty<GUILayoutOption>());
+					if (Event.current.type == EventType.Repaint) this.lootSearchRect = GUILayoutUtility.GetLastRect();
+					GUILayout.EndHorizontal();
+				}
+			}
+			else
+			{
+				this.lootMode = AutoAttackTrainer.LootMode.None;
+			}
+			GUILayout.Space(5f);
+			GUILayout.Label("<b>MAID Settings:</b>", Array.Empty<GUILayoutOption>());
+			this.maidEnabled = GUILayout.Toggle(this.maidEnabled, "  Feature Maid (Px)", Array.Empty<GUILayoutOption>());
+			bool maidEnabled2 = this.maidEnabled;
+			if (maidEnabled2)
+			{
+				GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
+				GUILayout.Space(20f);
+				GUILayout.Label("Goto:", new GUILayoutOption[]
+				{
+					GUILayout.Width(90f)
 				});
-				this.lootSearchNames = GUILayout.TextField(this.lootSearchNames, Array.Empty<GUILayoutOption>());
+				this.maidTargetUsername = GUILayout.TextField(this.maidTargetUsername, Array.Empty<GUILayoutOption>());
+				if (Event.current.type == EventType.Repaint) this.maidTargetRect = GUILayoutUtility.GetLastRect();
+				GUILayout.EndHorizontal();
+				GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
+				GUILayout.Space(20f);
+				this.maidActive = GUILayout.Toggle(this.maidActive, "  Active", Array.Empty<GUILayoutOption>());
 				GUILayout.EndHorizontal();
 			}
+			GUILayout.Space(10f);
+			GUILayout.Label(string.Format("Bot Tick Rate: <b>{0:F2}s</b>", this.tickRate), Array.Empty<GUILayoutOption>());
+			this.tickRate = GUILayout.HorizontalSlider(this.tickRate, 0.05f, 1f, Array.Empty<GUILayoutOption>());
+			GUI.enabled = true;
 		}
-		else
+		else if (this.currentTab == 2)
 		{
-			this.lootMode = AutoAttackTrainer.LootMode.None;
-		}
-		GUILayout.Space(5f);
-		GUILayout.Label("<b>MAID Settings:</b>", Array.Empty<GUILayoutOption>());
-		this.maidEnabled = GUILayout.Toggle(this.maidEnabled, "  Feature Maid (Px)", Array.Empty<GUILayoutOption>());
-		bool maidEnabled = this.maidEnabled;
-		if (maidEnabled)
-		{
-			GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
-			GUILayout.Space(20f);
-			GUILayout.Label("Goto:", new GUILayoutOption[]
+			GUILayout.Label("<b>Dev Tools & Utilities:</b>", Array.Empty<GUILayoutOption>());
+			GUILayout.Space(5f);
+			if (GUILayout.Button("<b><color=orange>Open Dev Console</color></b>", new GUILayoutOption[] { GUILayout.Height(25f) }))
 			{
-				GUILayout.Width(90f)
-			});
-			this.maidTargetUsername = GUILayout.TextField(this.maidTargetUsername, Array.Empty<GUILayoutOption>());
-			GUILayout.EndHorizontal();
-			GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
-			GUILayout.Space(20f);
-			this.maidActive = GUILayout.Toggle(this.maidActive, "  Active", Array.Empty<GUILayoutOption>());
-			GUILayout.EndHorizontal();
-		}
-		GUILayout.Space(10f);
-		GUILayout.Label(string.Format("Bot Tick Rate: <b>{0:F2}s</b>", this.tickRate), Array.Empty<GUILayoutOption>());
-		this.tickRate = GUILayout.HorizontalSlider(this.tickRate, 0.05f, 1f, Array.Empty<GUILayoutOption>());
-		GUI.enabled = true;
-		GUILayout.Space(5f);
-		if (GUILayout.Button("<b><color=orange>Open Dev Console</color></b>", new GUILayoutOption[] { GUILayout.Height(25f) }))
-		{
-			UnityEngine.Object.Instantiate<GameObject>((GameObject)Resources.Load("UI/DevConsole"));
-		}
-		GUILayout.Space(5f);
-		GUILayout.Label("<b>Developer / Debug Cheats:</b>", Array.Empty<GUILayoutOption>());
-		bool newDevMode = GUILayout.Toggle(Game.DevMode, "  Enable Developer Mode", Array.Empty<GUILayoutOption>());
-		if (newDevMode != Game.DevMode)
-		{
-			Game.DevMode = newDevMode;
-			DebugSprite._showAll = newDevMode;
-			if (Game.OnDevMode != null)
+				UnityEngine.Object.Instantiate<GameObject>((GameObject)Resources.Load("UI/DevConsole"));
+			}
+			GUILayout.Space(5f);
+			GUILayout.Label("<b>Developer / Debug Cheats:</b>", Array.Empty<GUILayoutOption>());
+			bool newDevMode = GUILayout.Toggle(Game.DevMode, "  Enable Developer Mode", Array.Empty<GUILayoutOption>());
+			if (newDevMode != Game.DevMode)
 			{
-				try
+				Game.DevMode = newDevMode;
+				DebugSprite._showAll = newDevMode;
+				if (Game.OnDevMode != null)
 				{
-					Game.OnDevMode(newDevMode);
+					try
+					{
+						Game.OnDevMode(newDevMode);
+					}
+					catch {}
 				}
-				catch {}
 			}
-		}
-		this.noclip = GUILayout.Toggle(this.noclip, "  Noclip (Walk Through Walls)", Array.Empty<GUILayoutOption>());
-		GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
-		if (GUILayout.Button("Show Map Info", Array.Empty<GUILayoutOption>()))
-		{
-			if (Area.currentArea != null && Entity.mainPlayer != null && Singleton<UIChat>.Instance != null)
+			this.noclip = GUILayout.Toggle(this.noclip, "  Noclip (Walk Through Walls)", Array.Empty<GUILayoutOption>());
+			GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
+			if (GUILayout.Button("Show Map Info", Array.Empty<GUILayoutOption>()))
 			{
-				string info = string.Format("<b>Map Info:</b> ID {0} | Name: {1} | Cell: {2}", Area.currentArea.ID, Area.currentArea.Name, Entity.mainPlayer.Frame);
-				Singleton<UIChat>.Instance.SetText(info);
+				if (Area.currentArea != null && Entity.mainPlayer != null && Singleton<UIChat>.Instance != null)
+				{
+					string info = string.Format("<b>Map Info:</b> ID {0} | Name: {1} | Cell: {2}", Area.currentArea.ID, Area.currentArea.Name, Entity.mainPlayer.Frame);
+					Singleton<UIChat>.Instance.SetText(info);
+				}
 			}
-		}
-		if (GUILayout.Button("List Map Cells", Array.Empty<GUILayoutOption>()))
-		{
-			if (Entity.mainPlayer != null && Entity.mainPlayer.currentArea != null && Singleton<UIChat>.Instance != null)
+			if (GUILayout.Button("List Map Cells", Array.Empty<GUILayoutOption>()))
 			{
-				string cells = "<b>Cells:</b> " + string.Join(", ", Entity.mainPlayer.currentArea.Cells.Keys);
-				Singleton<UIChat>.Instance.SetText(cells);
+				if (Entity.mainPlayer != null && Entity.mainPlayer.currentArea != null && Singleton<UIChat>.Instance != null)
+				{
+					string cells = "<b>Cells:</b> " + string.Join(", ", Entity.mainPlayer.currentArea.Cells.Keys);
+					Singleton<UIChat>.Instance.SetText(cells);
+				}
+			}
+			GUILayout.EndHorizontal();
+			GUILayout.Space(10f);
+			GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
+			GUILayout.Label("<color=green>Activated</color> for: <b>" + Entity.mainPlayer.Name + "</b>", Array.Empty<GUILayoutOption>());
+			if (GUILayout.Button("Reset Key", GUILayout.Width(80f)))
+			{
+				this.activationKey = "";
+				this.isActivated = false;
+				PlayerPrefs.DeleteKey("Codex_ActivationKey");
+				PlayerPrefs.Save();
+			}
+			GUILayout.EndHorizontal();
+		}
+		else if (this.currentTab == 1)
+		{
+			GUILayout.Label("<b>Voice Chat Settings:</b>", Array.Empty<GUILayoutOption>());
+			if (VoiceChatManager.Instance != null)
+			{
+				bool newVoice = GUILayout.Toggle(VoiceChatManager.Instance.voiceEnabled, "  Enable Voice Room (P2P)", Array.Empty<GUILayoutOption>());
+				if (newVoice != VoiceChatManager.Instance.voiceEnabled)
+				{
+					VoiceChatManager.Instance.ToggleVoice(newVoice);
+				}
+
+				if (VoiceChatManager.Instance.voiceEnabled)
+				{
+					GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
+					GUILayout.Space(20f);
+					GUILayout.Label("Status: " + VoiceChatManager.Instance.connectionStatus, Array.Empty<GUILayoutOption>());
+					GUILayout.EndHorizontal();
+
+					// --- Mic Device Selector ---
+					GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
+					GUILayout.Space(20f);
+					GUILayout.Label("Mic:", GUILayout.Width(40f));
+					if (Microphone.devices.Length > 0)
+					{
+						int idx = VoiceChatManager.Instance.selectedMicIndex;
+						string currentMic = (idx >= 0 && idx < Microphone.devices.Length) ? Microphone.devices[idx] : "Default";
+						if (currentMic.Length > 22) currentMic = currentMic.Substring(0, 19) + "...";
+						if (GUILayout.Button(currentMic, GUILayout.Height(18f)))
+						{
+							int nextIdx = (idx + 1) % Microphone.devices.Length;
+							VoiceChatManager.Instance.ChangeMicrophone(nextIdx);
+						}
+					}
+					else
+					{
+						GUILayout.Label("<color=red>No Microphone Found</color>");
+					}
+					GUILayout.EndHorizontal();
+
+					// --- Mic Meter (VU Indicator) ---
+					GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
+					GUILayout.Space(20f);
+					GUILayout.Label("Input Level:", GUILayout.Width(80f));
+					int barWidth = (int)(VoiceChatManager.Instance.micLevel * 100f);
+					if (barWidth > 100) barWidth = 100;
+					string bar = new string('|', Math.Max(0, barWidth / 5));
+					GUILayout.Label($"<color=lime>{bar}</color>", Array.Empty<GUILayoutOption>());
+					GUILayout.EndHorizontal();
+
+					// --- Speaker Volume Slider ---
+					GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
+					GUILayout.Space(20f);
+					GUILayout.Label("Output Volume:", GUILayout.Width(100f));
+					float newVol = GUILayout.HorizontalSlider(VoiceChatManager.Instance.voiceVolume, 0f, 1f, Array.Empty<GUILayoutOption>());
+					if (newVol != VoiceChatManager.Instance.voiceVolume)
+					{
+						VoiceChatManager.Instance.SetVoiceVolume(newVol);
+					}
+					GUILayout.EndHorizontal();
+
+					// Tombol jejer: mute, deafen, mictest
+					GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
+					GUILayout.Space(20f);
+					bool newMute = GUILayout.Toggle(VoiceChatManager.Instance.isMuted, " Mute", Array.Empty<GUILayoutOption>());
+					if (newMute != VoiceChatManager.Instance.isMuted) VoiceChatManager.Instance.isMuted = newMute;
+
+					bool newDeafen = GUILayout.Toggle(VoiceChatManager.Instance.isDeafened, " Deafen", Array.Empty<GUILayoutOption>());
+					if (newDeafen != VoiceChatManager.Instance.isDeafened) VoiceChatManager.Instance.isDeafened = newDeafen;
+
+					bool newLoopback = GUILayout.Toggle(VoiceChatManager.Instance.isLoopback, " Mic Test", Array.Empty<GUILayoutOption>());
+					if (newLoopback != VoiceChatManager.Instance.isLoopback) VoiceChatManager.Instance.isLoopback = newLoopback;
+					GUILayout.EndHorizontal();
+
+					// Voice Info button/toggle
+					GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
+					GUILayout.Space(20f);
+					VoiceChatManager.Instance.showVoiceDebug = GUILayout.Toggle(VoiceChatManager.Instance.showVoiceDebug, " Voice Info", Array.Empty<GUILayoutOption>());
+					GUILayout.EndHorizontal();
+
+					if (VoiceChatManager.Instance.showVoiceDebug)
+					{
+						GUILayout.BeginVertical(GUI.skin.box, Array.Empty<GUILayoutOption>());
+						// Status: CONNECTED or NO
+						GUILayout.Label($"<b>Status:</b> {(VoiceChatManager.Instance.isTcpConnected ? "<color=green>CONNECTED</color>" : "<color=red>NO</color>")}", Array.Empty<GUILayoutOption>());
+						
+						// Show Active Peers ON OFF
+						this.showActivePeers = GUILayout.Toggle(this.showActivePeers, " Show Active Peers", Array.Empty<GUILayoutOption>());
+						if (this.showActivePeers)
+						{
+							string peersStr = "";
+							List<string> peerNames = VoiceChatManager.Instance.GetActivePeerNames();
+							if (peerNames != null)
+							{
+								foreach (var name in peerNames)
+								{
+									peersStr += name + ", ";
+								}
+							}
+							if (peersStr.Length > 0) peersStr = peersStr.Substring(0, peersStr.Length - 2);
+							else peersStr = "None";
+							GUILayout.Label($"<b>Active Peers:</b> {peersStr}", Array.Empty<GUILayoutOption>());
+						}
+						GUILayout.EndVertical();
+					}
+				}
+			}
+			else
+			{
+				GUILayout.Label("<color=red>Voice Manager not initialized.</color>", Array.Empty<GUILayoutOption>());
 			}
 		}
-		GUILayout.EndHorizontal();
-		GUILayout.Space(10f);
-		GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
-		GUILayout.Label("<color=green>Activated</color> for: <b>" + Entity.mainPlayer.Name + "</b>", Array.Empty<GUILayoutOption>());
-		if (GUILayout.Button("Reset Key", GUILayout.Width(80f)))
-		{
-			this.activationKey = "";
-			this.isActivated = false;
-			PlayerPrefs.DeleteKey("Codex_ActivationKey");
-			PlayerPrefs.Save();
-		}
-		GUILayout.EndHorizontal();
 
 		GUILayout.Space(5f);
 		GUILayout.Label("<b>UI Settings:</b>", Array.Empty<GUILayoutOption>());
@@ -881,17 +1067,37 @@ public class AutoAttackTrainer : MonoBehaviour
 		GUILayout.Space(15f);
 		GUILayout.Label("<color=grey>Press <b>F11</b> to toggle menu visibility.\nType <b>/codex</b> to toggle.</color>", Array.Empty<GUILayoutOption>());
 		GUILayout.Label("<b><color=white>creator: sxbb</color></b>", Array.Empty<GUILayoutOption>());
-		GUI.Label(new Rect(this.windowRect.width - 15f, this.windowRect.height - 15f, 15f, 15f), "<color=grey>◢</color>");
+		GUI.Label(new Rect(this.windowRect.width - 18f, this.windowRect.height - 18f, 18f, 18f), "<b><color=orange>◢</color></b>");
+		Rect resizeZone = new Rect(this.windowRect.width - 25f, this.windowRect.height - 25f, 25f, 25f);
+		if (!this.isResizing && !(Event.current.type == EventType.MouseDown && resizeZone.Contains(Event.current.mousePosition)))
+		{
+			Vector2 mousePos = Event.current.mousePosition;
+			bool overInput = (this.activationKeyRect.Contains(mousePos) || 
+							  this.targetSearchRect.Contains(mousePos) || 
+							  this.lootSearchRect.Contains(mousePos) || 
+							  this.maidTargetRect.Contains(mousePos));
+			if (!overInput)
+			{
+				GUI.DragWindow();
+			}
+		}
 	}
 
 	private string activationKey = "";
 	private bool isActivated = false;
 	private bool isMinimized = false;
+	private int currentTab = 0;
+	private bool showActivePeers = false;
+
+	private Rect activationKeyRect = Rect.zero;
+	private Rect targetSearchRect = Rect.zero;
+	private Rect lootSearchRect = Rect.zero;
+	private Rect maidTargetRect = Rect.zero;
 
 	private string GenerateKey(string username)
 	{
 		if (string.IsNullOrEmpty(username)) return "00000";
-		string input = username.Trim().ToLower() + "codex_secret_2026";
+		string input = username.Trim().ToLower() + Config.ActivationHashKey;
 		uint hash = 2166136261U;
 		foreach (char c in input)
 		{
@@ -901,6 +1107,7 @@ public class AutoAttackTrainer : MonoBehaviour
 		return ((hash % 90000U) + 10000U).ToString();
 	}
 
+	// Token: 0x04000005 RID: 5
 	private bool _isEnabled = false;
 
 	private bool _noclip = false;
@@ -938,63 +1145,91 @@ public class AutoAttackTrainer : MonoBehaviour
 		}
 	}
 
+	// Token: 0x04000006 RID: 6
 	public bool autoTarget = false;
 
+	// Token: 0x04000007 RID: 7
 	public bool targetByName = false;
 
+	// Token: 0x04000008 RID: 8
 	public string targetSearchNames = "";
 
+	// Token: 0x04000009 RID: 9
 	public bool autoAttackSlot0 = false;
 
+	// Token: 0x0400000A RID: 10
 	public bool autoSkills = false;
 
+	// Token: 0x0400000B RID: 11
 	public bool autoMove = false;
 
+	// Token: 0x0400000C RID: 12
 	public bool autoLoot = false;
 
+	// Token: 0x0400000D RID: 13
 	public float tickRate = 0.3f;
 
+	// Token: 0x0400000E RID: 14
 	public bool infiniteRange = false;
 	public bool keepCellOnDeath = false;
 
+	// Token: 0x0400000F RID: 15
 	public AutoAttackTrainer.LootMode lootMode = AutoAttackTrainer.LootMode.None;
 
+	// Token: 0x04000010 RID: 16
 	public string lootSearchNames = "";
 
+	// Token: 0x04000011 RID: 17
 	private bool _maidEnabled = false;
 
+	// Token: 0x04000012 RID: 18
 	private bool _maidActive = false;
 
+	// Token: 0x04000013 RID: 19
 	public string maidTargetUsername = "";
 
-	private bool showMenu = true;
+	// Token: 0x04000014 RID: 20
+	public bool showMenu = true;
 
-	private Rect windowRect = new Rect(100f, 100f, 320f, 725f);
+	// Token: 0x04000015 RID: 21
+	public Rect windowRect = new Rect(100f, 100f, 320f, 460f);
 
+	// Token: 0x04000016 RID: 22
 	private Coroutine trainerCoroutine;
 
+	// Token: 0x04000017 RID: 23
 	private float gotoTimer = 0f;
 
+	// Token: 0x04000018 RID: 24
 	public float windowOpacity = 0.95f;
 
+	// Token: 0x04000019 RID: 25
 	public float windowWidth = 320f;
 
-	public float windowHeight = 725f;
+	// Token: 0x0400001A RID: 26
+	public float windowHeight = 460f;
 
+	// Token: 0x0400001B RID: 27
 	private bool isResizing = false;
 
+	// Token: 0x0400001C RID: 28
 	private Vector2 resizeStartMousePos;
 
+	// Token: 0x0400001D RID: 29
 	private Rect resizeStartRect;
 
 	private Texture2D privateBgTexture;
 	private GUIStyle privateWindowStyle;
 	private float lastOpacity = -1f;
 
+	// Token: 0x02000008 RID: 8
 	public enum LootMode
 	{
+		// Token: 0x0400001F RID: 31
 		None,
+		// Token: 0x04000020 RID: 32
 		SelectDrop,
+		// Token: 0x04000021 RID: 33
 		AllDrop
 	}
 }
@@ -1060,6 +1295,56 @@ public static class ResponseResPlayer_Execute_Patch
 				}
 			}
 			return false;
+		}
+		return true;
+	}
+}
+
+[HarmonyPatch(typeof(UIChatActions), "UpdateText")]
+public static class UIChatActions_UpdateText_Patch
+{
+	[HarmonyPrefix]
+	public static bool Prefix(ResponseChat rc)
+	{
+		if (VoiceChatManager.Instance != null && VoiceChatManager.Instance.HandleIncomingChat(rc))
+		{
+			return false; // Skip the original UpdateText (blocks chat from UI)
+		}
+		return true;
+	}
+}
+
+[HarmonyPatch(typeof(ClickableWalk), "OnMouseDown")]
+public static class ClickableWalk_OnMouseDown_Patch
+{
+	[HarmonyPrefix]
+	public static bool Prefix()
+	{
+		if (AutoAttackTrainer.Instance != null && AutoAttackTrainer.Instance.showMenu)
+		{
+			Vector2 guiMousePos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
+			if (AutoAttackTrainer.Instance.windowRect.Contains(guiMousePos))
+			{
+				return false; // Block game action
+			}
+		}
+		return true;
+	}
+}
+
+[HarmonyPatch(typeof(Targetable), "OnMouseDown")]
+public static class Targetable_OnMouseDown_Patch
+{
+	[HarmonyPrefix]
+	public static bool Prefix()
+	{
+		if (AutoAttackTrainer.Instance != null && AutoAttackTrainer.Instance.showMenu)
+		{
+			Vector2 guiMousePos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
+			if (AutoAttackTrainer.Instance.windowRect.Contains(guiMousePos))
+			{
+				return false; // Block game action
+			}
 		}
 		return true;
 	}

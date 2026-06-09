@@ -10,6 +10,7 @@
     <Product>Codex Trainer Patcher</Product>
     <Description>Dynamic patcher and hook injector for AdventureQuest Worlds Infinity.</Description>
     <Copyright>Copyright © 2026 Codex Team</Copyright>
+    <ApplicationIcon>setup.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,5 +20,10 @@
   <ItemGroup>
     <EmbeddedResource Include="..\AutoAttackTrainer\bin\Release\netstandard2.1\AutoAttackTrainer.dll" Link="Resources\AutoAttackTrainer.dll" />
     <EmbeddedResource Include="..\AutoAttackTrainer\bin\Release\netstandard2.1\0Harmony.dll" Link="Resources\0Harmony.dll" />
+    <EmbeddedResource Include="..\AutoAttackTrainer\bin\Release\netstandard2.1\Concentus.dll" Link="Resources\Concentus.dll" />
+    <EmbeddedResource Include="..\AutoAttackTrainer\bin\Release\netstandard2.1\System.Memory.dll" Link="Resources\System.Memory.dll" />
+    <EmbeddedResource Include="..\AutoAttackTrainer\bin\Release\netstandard2.1\System.Buffers.dll" Link="Resources\System.Buffers.dll" />
+    <EmbeddedResource Include="..\AutoAttackTrainer\bin\Release\netstandard2.1\System.Runtime.CompilerServices.Unsafe.dll" Link="Resources\System.Runtime.CompilerServices.Unsafe.dll" />
+    <EmbeddedResource Include="..\AutoAttackTrainer\bin\Release\netstandard2.1\System.Numerics.Vectors.dll" Link="Resources\System.Numerics.Vectors.dll" />
   </ItemGroup>
 </Project>
