@@ -10,7 +10,7 @@
     <Product>Codex Trainer Patcher</Product>
     <Description>Dynamic patcher and hook injector for AdventureQuest Worlds Infinity.</Description>
     <Copyright>Copyright © 2026 Codex Team</Copyright>
-    <ApplicationIcon>setup.ico</ApplicationIcon>
+    <ApplicationIcon>logo_codex.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

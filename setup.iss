@@ -33,8 +33,8 @@ DisableWelcomePage=no
 DisableDirPage=no
 DisableReadyPage=no
 DisableFinishedPage=no
-SetupIconFile=Publish\setup.ico
-UninstallDisplayIcon={app}\README.txt
+SetupIconFile=Publish\logo_codex.ico
+UninstallDisplayIcon={app}\logo_codex.ico
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -48,12 +48,12 @@ Source: "AutoAttackTrainer\bin\Release\netstandard2.1\System.Buffers.dll"; DestD
 Source: "AutoAttackTrainer\bin\Release\netstandard2.1\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "AutoAttackTrainer\bin\Release\netstandard2.1\System.Numerics.Vectors.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Patcher\bin\Release\net8.0\win-x64\publish\Patcher.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Publish\setup.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Publish\logo_codex.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Publish\README.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
 
 [Icons]
-Name: "{userdesktop}\Play AQW Infinity with Codex"; Filename: "{app}\Patcher.exe"; WorkingDir: "{app}"; IconFilename: "{app}\setup.ico"
-Name: "{userstartmenu}\Play AQW Infinity with Codex"; Filename: "{app}\Patcher.exe"; WorkingDir: "{app}"; IconFilename: "{app}\setup.ico"
+Name: "{userdesktop}\Play AQW Infinity with Codex"; Filename: "{app}\Patcher.exe"; WorkingDir: "{app}"; IconFilename: "{app}\logo_codex.ico"
+Name: "{userstartmenu}\Play AQW Infinity with Codex"; Filename: "{app}\Patcher.exe"; WorkingDir: "{app}"; IconFilename: "{app}\logo_codex.ico"
 
 [Run]
 Filename: "{app}\Patcher.exe"; Parameters: "-s"; Flags: runhidden
