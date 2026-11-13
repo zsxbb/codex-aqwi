@@ -1056,7 +1056,7 @@ public class VoiceChatManager : MonoBehaviour
             if (Singleton<AEC>.Instance != null)
             {
                 // Whisper to sender
-                Singleton<AEC>.Instance.sendRequest(RequestChat.CreateWhisper(targetUser, new string[] { "", "", msg }));
+                Singleton<AEC>.Instance.sendRequest(new RequestChat(new System.Collections.Generic.List<string> { msg, "whisper", targetUser }));
             }
         });
     }

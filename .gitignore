@@ -1,4 +1,4 @@
-# Visual Studio & Rider build folders
+# Visual Studio, .NET & Rider build folders
 [Bb]in/
 [Oo]bj/
 [Dd]ebug/
@@ -21,3 +21,18 @@ desktop.ini
 
 # Generated config
 Config.g.cs
+
+# Decompiled game assembly reference dump
+/Latest_Assembly-CSharp/
+
+# Large archive files & backups
+*.rar
+*.zip
+*.7z
+*.bak
+
+# Publish artifacts
+/Publish/*.rar
+/Publish/*.zip
+/Publish/*.pdb
+/Publish/CodexSetup.exe
