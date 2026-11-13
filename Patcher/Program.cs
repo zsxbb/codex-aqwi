@@ -6,8 +6,22 @@ using Mono.Cecil.Cil;
 
 class Program
 {
+    static void WaitExit(bool isSilent)
+    {
+        if (isSilent || Console.IsInputRedirected) return;
+        try
+        {
+            Console.WriteLine("\nPress any key to exit...");
+            Console.ReadKey();
+        }
+        catch { }
+    }
+
     static void Main(string[] args)
     {
+        bool isSilent = args.Any(a => a.Equals("-s", StringComparison.OrdinalIgnoreCase) || 
+                                      a.Equals("--silent", StringComparison.OrdinalIgnoreCase));
+
         Console.WriteLine("=================================================");
         Console.WriteLine("        Codex Trainer Patcher v2.0            ");
         Console.WriteLine("=================================================");
@@ -32,8 +46,7 @@ class Program
             else
             {
                 Console.WriteLine($"[Error] AutoAttackTrainer.dll not found in the patcher folder or embedded resources.");
-                Console.WriteLine("Press any key to exit...");
-                Console.ReadKey();
+                WaitExit(isSilent);
                 return;
             }
         }
@@ -56,6 +69,12 @@ class Program
             }
             else
             {
+                if (isSilent)
+                {
+                    Console.WriteLine("\n[Error] Game Managed folder not found automatically in silent mode.");
+                    return;
+                }
+
                 // Strategy C: Prompt the user
                 Console.WriteLine("\n[Notice] Could not find the game's 'Managed' folder automatically.");
                 Console.WriteLine("Please copy the path to the game's 'Managed' folder and paste it here.");
@@ -70,8 +89,7 @@ class Program
                 else
                 {
                     Console.WriteLine("\n[Error] Invalid folder or Assembly-CSharp.dll is missing in that folder.");
-                    Console.WriteLine("Press any key to exit...");
-                    Console.ReadKey();
+                    WaitExit(isSilent);
                     return;
                 }
             }
@@ -102,8 +120,7 @@ class Program
                 else
                 {
                     Console.WriteLine($"[Error] AutoAttackTrainer.dll could not be extracted or found locally.");
-                    Console.WriteLine("Press any key to exit...");
-                    Console.ReadKey();
+                    WaitExit(isSilent);
                     return;
                 }
             }
@@ -165,8 +182,7 @@ class Program
                 {
                     Console.WriteLine("[Error] Backup file is missing but target DLL is already patched.");
                     Console.WriteLine("Please verify game files in Steam first to restore original files.");
-                    Console.WriteLine("Press any key to exit...");
-                    Console.ReadKey();
+                    WaitExit(isSilent);
                     return;
                 }
                 sourceDllToPatch = backupDllPath;
@@ -259,8 +275,7 @@ class Program
             Console.WriteLine(ex.StackTrace);
         }
 
-        Console.WriteLine("\nPress any key to exit...");
-        Console.ReadKey();
+        WaitExit(isSilent);
     }
 
     static bool HasEmbeddedFile(string filename)

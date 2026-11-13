@@ -57,13 +57,10 @@ Name: "{userstartmenu}\Play AQW Infinity with Codex"; Filename: "{app}\Patcher.e
 
 [Run]
 Filename: "{app}\Patcher.exe"; Parameters: "-s"; Flags: runhidden
-Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -Command ""Add-MpPreference -ExclusionPath '{app}', '{app}\..\..'"""; Flags: runhidden; StatusMsg: "Configuring security exclusions..."
 
 [UninstallRun]
 ; Restore backup DLL when uninstalling
 Filename: "{cmd}"; Parameters: "/c if exist ""{app}\Assembly-CSharp.dll.bak"" (move /y ""{app}\Assembly-CSharp.dll.bak"" ""{app}\Assembly-CSharp.dll"")"; RunOnceId: "RestoreGameBackup"; Flags: runhidden
-; Remove security exclusion when uninstalling
-Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -Command ""Remove-MpPreference -ExclusionPath '{app}', '{app}\..\..'"""; Flags: runhidden; RunOnceId: "RemoveSecurityExclusion"
 
 [UninstallDelete]
 ; Clean up any remaining backup file
