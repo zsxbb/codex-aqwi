@@ -1,88 +1,108 @@
-# Codex Trainer - AdventureQuest Worlds Infinity
+# ⚔️ Codex Trainer — AdventureQuest Worlds: Infinity
 
-Proyek ini berisi *source code* dan *release* untuk **Codex Trainer v2.0** pada game AdventureQuest Worlds Infinity. Trainer ini diinjeksikan secara dinamis ke dalam file Assembly game menggunakan pustaka Mono.Cecil dan Harmony.
-
----
-
-## 📂 Struktur Proyek
-
-Repositori ini terdiri dari beberapa proyek C# berikut:
-
-1. **`AutoAttackTrainer`**: Proyek utama Class Library (.NET Standard 2.1) yang berisi logika trainer, antarmuka GUI dalam game (Unity IMGUI), auto attack, infinite range, bypass respawn, bypass anti-cheat obrolan, dan lain-lain.
-2. **`Patcher`**: Aplikasi Console (.NET 8.0) yang digunakan untuk mendeteksi instalasi game, membuat cadangan (`.bak`), dan secara dinamis menyuntikkan (*injecting*) pemanggilan inisialisasi Codex ke dalam file `Assembly-CSharp.dll` game.
-3. **`0Harmony`**: Pustaka Harmony yang digunakan untuk memotong (*hooking*) fungsi-fungsi internal game secara *runtime*.
-4. **`Publish`**: Folder yang berisi hasil kompilasi siap pakai.
+**Codex Trainer** adalah modifikasi canggih dan *trainer in-game* mandiri untuk **AdventureQuest Worlds Infinity**. Dibangun menggunakan arsitektur dynamic injection (.NET & Harmony), mod ini menghadirkan beragam utilitas pertarungan otomatis, manipulasi mekanik permainan, serta fitur **WebRTC Proximity Voice Chat** terintegrasi secara langsung di dalam game.
 
 ---
 
-## 🚀 Panduan Penggunaan (Untuk Pemain)
+## 🌟 Fitur Unggulan
 
-Jika Anda hanya ingin menggunakan trainer ini tanpa melakukan kompilasi ulang, terdapat dua cara:
+### 🎙️ 1. WebRTC In-Game Voice Chat
+* **Komunikasi Suara Real-Time:** Ngobrol langsung dengan pemain sesama pengguna Codex di room yang sama tanpa perlu aplikasi pihak ketiga seperti Discord.
+* **Kompresi Audio Opus:** Menggunakan codec Opus standar industri (`Concentus`) untuk kualitas suara jernih dengan latensi ultra-rendah dan hemat kuota data.
+* **Pengaturan Audio Lengkap:**
+  * Dropdown pemilihan mikrofon perangkat keras secara langsung di dalam game.
+  * **Input Boost** (0% s/d 300%) untuk memperjelas suara mic yang pelan.
+  * **Output Volume Boost** (0% s/d 300%) serta indikator VU meter visual real-time.
+* **Koneksi Terenkripsi:** Paket audio dan signaling dilindungi dengan enkripsi data.
 
-### Metode A: Menggunakan Installer Otomatis (Direkomendasikan)
-1. Buka folder **`Publish`** (atau unduh rilisan terbaru).
-2. Pastikan game AdventureQuest Worlds Infinity di Steam dalam keadaan **tertutup / tidak berjalan**.
-3. Jalankan **`CodexSetup.exe`**.
-4. Ikuti panduan instalasi di layar. Installer akan secara otomatis mendeteksi lokasi game Anda melalui Registry Steam.
-5. Klik **Install**, dan installer akan menyalin file serta menambal (patch) game secara otomatis di latar belakang.
-6. Untuk menghapus trainer, Anda cukup melakukan uninstall melalui **Windows Settings > Apps** atau **Control Panel** seperti aplikasi biasa. Game Anda akan otomatis pulih ke keadaan semula tanpa mod.
+### ⚔️ 2. Modifikasi Pertarungan (Combat & Farming)
+* **Auto Attack Otomatis:** Menyerang monster terdekat secara otomatis tanpa klik berulang, sangat optimal untuk grinding dan farming monster berjam-jam.
+* **Infinite Range (Bypass Jarak Serang):** Karakter dapat menyerang target dari mana saja di seluruh area layar tanpa batasan jarak (*melee to screen-wide reach*).
+* **Auto Target & Skill Rotation:** Otomatis mengunci target baru saat monster mati dan mengeksekusi rotasi skill.
 
-### Metode B: Menggunakan Patcher Manual (Cadangan)
-1. Buka folder **`Publish`** (atau unduh rilisan terbaru).
-2. Pastikan game AdventureQuest Worlds Infinity di Steam dalam keadaan **tertutup / tidak berjalan**.
-3. Jalankan **`Patcher.exe`**.
-4. Patcher akan mencoba mencari folder `Managed` game secara otomatis di direktori instalasi Steam standar:
-   `C:\Program Files (x86)\Steam\steamapps\common\AdventureQuest Worlds Unity Playtest\AdventureQuest Worlds Infinity_Data\Managed`
-5. Jika folder game berada di lokasi lain, salin alamat folder `Managed` game Anda dan tempel (*paste*) ke jendela Patcher, lalu tekan **Enter**.
-6. Patcher akan menyalin file, membuat cadangan `Assembly-CSharp.dll.bak`, dan memodifikasi file `Assembly-CSharp.dll` yang asli.
+### 🏃 3. Movement & Respawn Tweaks
+* **Keep Cell on Death (Respawn di Tempat Mati):** Jika karakter Anda gugur saat boss raid atau farming, karakter akan langsung bangkit kembali di koordinat tempat Anda mati tanpa terlempar ke spawn cell awal.
+* **Speed Hack / Movement Tweaks:** Mempercepat mobilitas perpindahan karakter di area peta.
 
----
-
-### Cara Mengaktifkan Trainer (Setelah Pemasangan)
-1. Buka game, login ke karakter Anda, masuk ke dalam room, lalu ketik **`/codex`** pada kolom obrolan (chat) untuk membuka menu.
-2. Pada pembukaan pertama, Anda akan melihat status "Activation Required" beserta Username akun Anda.
-3. Kirimkan Username tersebut kepada pembuat/penyedia mod untuk mendapatkan 5-Digit Activation Key Anda.
-4. Masukkan Activation Key di kotak input yang tersedia, dan menu trainer akan langsung terbuka.
-
+### 💻 4. Antarmuka In-Game & Injeksi Mandiri
+* **Menu Tersembunyi (`/codex`):** Antarmuka GUI tampil elegan di dalam game hanya saat dipanggil lewat chat, tidak mengotori layar permainan utama.
+* **Single-File Dynamic Patcher:** Executable mandiri `Patcher.exe` mengemas seluruh library dan dependensi di dalamnya tanpa membutuhkan DLL tercecer.
+* **Sistem Lisensi Aman:** Proteksi aktivasi berbasis key authorization yang unik untuk setiap nama karakter pemain.
 
 ---
 
-## 🛠️ Informasi untuk Pengembang (Developer Guide)
+## 📖 Tutorial Penggunaan
 
-Jika Anda ingin memodifikasi atau mengembangkan proyek ini:
+### Langkah 1: Pemasangan (Instalasi)
 
-### Prasyarat
-- **Visual Studio 2022** atau **JetBrains Rider**.
-- **.NET SDK 8.0** (untuk Patcher) dan **.NET Standard 2.1** support (untuk AutoAttackTrainer).
-- File game AdventureQuest Worlds Infinity yang asli dari Steam (karena proyek ini bergantung pada referensi DLL game).
-
-### Membuka Solusi
-Anda dapat membuka file solusi berikut untuk mulai mengedit kode:
-- **`AutoAttackTrainer.sln`** (Solusi utama yang berisi proyek Trainer).
-- **`0Harmony.sln`** (Solusi untuk pustaka Harmony jika diperlukan).
-
-### Konfigurasi Referensi (References)
-Proyek `AutoAttackTrainer` merujuk langsung ke file DLL Unity game di folder instalasi default Steam. Jika Anda menginstal game di direktori kustom, Anda perlu memperbarui `<HintPath>` di file `AutoAttackTrainer/AutoAttackTrainer.csproj` agar menunjuk ke folder game Anda:
-- `Assembly-CSharp.dll`
-- `UnityEngine.CoreModule.dll`
-- `UnityEngine.IMGUIModule.dll`
-- `UnityEngine.InputLegacyModule.dll`
-- `UnityEngine.UI.dll`
-- `Unity.TextMeshPro.dll`
-
-### Cara Build Ulang
-Untuk melakukan build ulang melalui terminal di folder solusi:
-```powershell
-dotnet build
-```
-Setelah build berhasil, DLL hasil kompilasi akan berada di `AutoAttackTrainer/bin/Debug/netstandard2.1/AutoAttackTrainer.dll`. Anda dapat menyalinnya ke folder game `Managed` Anda atau menaruhnya bersama `Patcher.exe` agar di-deploy oleh patcher.
+Pemasangan dilakukan dengan sangat mudah menggunakan installer wizard otomatis:
+1. Pastikan game **AdventureQuest Worlds Infinity** di Steam dalam keadaan **tertutup** (tidak sedang berjalan).
+2. Unduh berkas **`CodexSetup.rar`** dari rilis resmi, lalu ekstrak berkas `CodexSetup.exe`.
+3. Jalankan **`CodexSetup.exe`**. Installer akan secara otomatis mendeteksi folder instalasi game Anda di Steam.
+4. Klik **Next** hingga selesai. Installer akan menyuntikkan patch secara instan dalam waktu < 2 detik.
 
 ---
 
-## 🔄 Pemeliharaan Saat Game Mengalami Pembaruan (Steam Update)
-Jika game diperbarui oleh developer melalui Steam, file game yang telah di-patch (`Assembly-CSharp.dll`) akan tertimpa dengan versi yang baru dan bersih.
+### Langkah 2: Cara Aktivasi Pertama Kali
 
-Patcher v2.0 memiliki sistem **Self-Healing Backup**:
-- Cukup jalankan kembali `Patcher.exe` setelah game selesai di-update.
-- Patcher akan mendeteksi file game yang baru, memperbarui cadangan `.bak` ke versi game terbaru, dan menyuntikkan kembali hook Codex.
-- Baca detail lebih lengkap di [PATCH_GUIDE.md](PATCH_GUIDE.md).
+1. Buka game melalui Steam atau pintasan desktop **Play AQW Infinity with Codex**.
+2. Masuk ke karakter Anda dan kunjungi sembarang room (misal `/join battleon`).
+3. Pada kolom obrolan (chat), ketik:
+   ```text
+   /codex
+   ```
+4. Menu aktivasi Codex Trainer akan muncul di layar. Anda akan melihat status **"Activation Required"** beserta username karakter Anda.
+5. Salin username tersebut dan dapatkan **5-Digit Activation Key** dari penyedia mod/developer.
+6. Masukkan kode tersebut pada kotak input lisensi, lalu klik **Activate**.
+7. Menu fitur trainer akan langsung terbuka dan siap digunakan!
+
+---
+
+### Langkah 3: Menggunakan Fitur di Dalam Game
+
+* **Membuka/Menutup Menu:** Ketik `/codex` di chat kapan saja saat bermain.
+* **Menjalankan Auto Attack:** Buka tab **Combat** pada GUI Codex, lalu centang kotak **Auto Attack**. Karakter Anda akan otomatis mengunci target dan menyerang.
+* **Mengaktifkan Voice Chat:** 
+  1. Masuk ke tab **Voice Chat**.
+  2. Klik tombol **Connect**.
+  3. Pilih input microphone Anda pada menu dropdown dan sesuaikan slider **Input Boost** serta **Output Volume**.
+  4. Suara Anda akan otomatis terdengar oleh pemain lain di room yang sama yang juga terhubung ke voice chat.
+
+---
+
+### Langkah 4: Cara Menghapus (Uninstall Bersih)
+
+Jika Anda ingin bermain game dalam kondisi bersih tanpa mod:
+1. Buka **Windows Settings > Apps > Installed Apps** (atau Control Panel > Programs and Features).
+2. Cari **Codex Trainer**, lalu klik **Uninstall**.
+3. Uninstaller akan secara otomatis memulihkan berkas asli `Assembly-CSharp.dll` dari cadangan cadangan (`.bak`). Game Anda 100% kembali normal seperti semula.
+
+---
+
+## 🛡️ Keamanan & Privasi (Security & Anti-Cheat)
+
+### 1. Penjelasan Peringatan Antivirus (False Positive)
+Saat mengunduh atau menjalankan installer/patcher, Windows Defender atau antivirus pihak ketiga mungkin menampilkan peringatan:
+> **Mengapa ini terjadi?**  
+> Modifikasi game PC bekerja dengan metode **Dynamic Assembly / Memory Injection** (menggunakan pustaka *Mono.Cecil* dan *Harmony*) untuk menyuntikkan instruksi ke dalam berkas biner game. Pola injeksi biner ini memiliki tanda perilaku yang sama persis dengan cara kerja mod game, reverse-engineering tools, dan cheat engine, sehingga sering memicu alarm *False Positive (Heuristic)* pada antivirus.
+
+* **Jaminan Keamanan:** Berkas installer dan biner Codex dibangun langsung dari kode sumber terbuka di repositori ini, tidak memuat adware, cryptominer, trojan, atau spyware apa pun.
+* **Solusi:** Tambahkan berkas `CodexSetup.exe` atau folder game ke dalam daftar pengecualian (*Exclusion / Whitelist*) antivirus Anda jika terblokir.
+
+---
+
+### 2. Stealth Chat Interception (Privasi Akun)
+* Perintah `/codex` diintercept langsung pada level client-side sebelum pesan teks dikirimkan ke server game Artix Entertainment.
+* Pesan perintah aktivasi atau pembukaan menu Anda **tidak akan pernah terkirim** ke server umum atau terbaca oleh pemain lain/game master (GM).
+
+---
+
+### 3. Ketahanan Terhadap Update Game (Update-Persistence)
+* Bila Steam memperbarui game AQW Infinity, file biner game asli akan tertimpa versi baru.
+* Codex dirancang dengan sistem **Dynamic Hooking**: Patcher tidak menimpa file serialisasi Unity yang rentan membuat game crash. Anda cukup menjalankan kembali installer atau patcher satu kali setelah update Steam untuk mengaktifkan kembali mod tanpa perlu konfigurasi ulang.
+
+---
+
+## ⚖️ Penafian (Disclaimer)
+* Perangkat lunak ini dibuat untuk tujuan edukasi, penelitian modifikasi Unity engine, dan hiburan komunitas.
+* Penggunaan modifikasi dalam game daring selalu memiliki risiko regulasi akun dari pihak pengembang game. Gunakan fitur dengan bijak dan bertanggung jawab.
