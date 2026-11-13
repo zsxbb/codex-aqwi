@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Pixelplacement;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using HarmonyLib;
 
 // Token: 0x02000006 RID: 6
@@ -31,10 +32,23 @@ public class AutoAttackTrainer : MonoBehaviour
 			if (flag)
 			{
 				this._isEnabled = value;
-				bool flag2 = !this._isEnabled;
-				if (flag2)
+				if (!this._isEnabled)
 				{
-					this.ResetAllFeatures();
+					if (this.noclip)
+					{
+						this.SetNoclip(false);
+					}
+					if (Entity.mainPlayer != null && Entity.mainPlayer.currentState != Entity.State.Dead)
+					{
+						Entity.mainPlayer.StopWalking();
+					}
+				}
+				else
+				{
+					if (this.noclip)
+					{
+						this.SetNoclip(true);
+					}
 				}
 			}
 		}
@@ -306,7 +320,7 @@ public class AutoAttackTrainer : MonoBehaviour
 							}
 							target = null;
 						}
-						bool flag17 = shouldCombat && this.autoMove && mainPlayer.target != null && mainPlayer.target.currentState > Entity.State.Dead;
+						bool flag17 = shouldCombat && this.autoMove && !this.infiniteRange && mainPlayer.target != null && mainPlayer.target.currentState > Entity.State.Dead;
 						if (flag17)
 						{
 							this.CheckAndMoveToTarget(mainPlayer);
@@ -757,32 +771,38 @@ public class AutoAttackTrainer : MonoBehaviour
 			this.isEnabled = GUILayout.Toggle(this.isEnabled, "  <b><color=green>ENABLE Codex</color></b>", Array.Empty<GUILayoutOption>());
 			GUILayout.Space(5f);
 			GUI.enabled = this.isEnabled;
-			this.autoTarget = GUILayout.Toggle(this.autoTarget, "  Auto Target Monster", Array.Empty<GUILayoutOption>());
-			bool flag3 = this.autoTarget;
-			if (flag3)
+
+			bool isAutoAttacking = this.autoAttackSlot0 || this.autoSkills;
+			bool newAutoAttacking = GUILayout.Toggle(isAutoAttacking, "  Auto Attack", Array.Empty<GUILayoutOption>());
+			if (newAutoAttacking != isAutoAttacking)
 			{
+				this.autoAttackSlot0 = newAutoAttacking;
+				this.autoSkills = newAutoAttacking;
+				this.autoTarget = newAutoAttacking;
+				this.autoMove = newAutoAttacking;
+			}
+			if (this.autoAttackSlot0 || this.autoSkills)
+			{
+				this.autoTarget = true;
+				this.autoMove = true;
+
 				GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
 				GUILayout.Space(20f);
-				bool flag4 = !this.targetByName;
-				bool flag5 = this.targetByName;
-				bool flag6 = GUILayout.Toggle(flag4, "Nearest", Array.Empty<GUILayoutOption>());
-				bool flag7 = GUILayout.Toggle(flag5, "Keyword", Array.Empty<GUILayoutOption>());
-				bool flag8 = flag6 != flag4;
-				if (flag8)
+				bool isNearest = !this.targetByName;
+				bool isKeyword = this.targetByName;
+				bool newNearest = GUILayout.Toggle(isNearest, "Nearest", Array.Empty<GUILayoutOption>());
+				bool newKeyword = GUILayout.Toggle(isKeyword, "Keyword", Array.Empty<GUILayoutOption>());
+				if (newNearest != isNearest)
 				{
-					this.targetByName = !flag6;
+					this.targetByName = !newNearest;
 				}
-				else
+				else if (newKeyword != isKeyword)
 				{
-					bool flag9 = flag7 != flag5;
-					if (flag9)
-					{
-						this.targetByName = flag7;
-					}
+					this.targetByName = newKeyword;
 				}
 				GUILayout.EndHorizontal();
-				bool flag10 = this.targetByName;
-				if (flag10)
+
+				if (this.targetByName)
 				{
 					GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
 					GUILayout.Space(20f);
@@ -795,14 +815,12 @@ public class AutoAttackTrainer : MonoBehaviour
 					GUILayout.EndHorizontal();
 				}
 			}
-			this.autoMove = GUILayout.Toggle(this.autoMove, "  Auto Charge to Target", Array.Empty<GUILayoutOption>());
-			bool combinedAuto = this.autoAttackSlot0 || this.autoSkills;
-			bool newCombinedAuto = GUILayout.Toggle(combinedAuto, "  Auto Attack", Array.Empty<GUILayoutOption>());
-			if (newCombinedAuto != combinedAuto)
+			else
 			{
-				this.autoAttackSlot0 = newCombinedAuto;
-				this.autoSkills = newCombinedAuto;
+				this.autoTarget = false;
+				this.autoMove = false;
 			}
+
 			this.infiniteRange = GUILayout.Toggle(this.infiniteRange, "  Infinite Range", Array.Empty<GUILayoutOption>());
 			this.keepCellOnDeath = GUILayout.Toggle(this.keepCellOnDeath, "  Death-Respawn Cell", Array.Empty<GUILayoutOption>());
 			GUILayout.Space(5f);
@@ -930,6 +948,7 @@ public class AutoAttackTrainer : MonoBehaviour
 				}
 			}
 			GUILayout.EndHorizontal();
+			GUI.enabled = true;
 			GUILayout.Space(10f);
 			GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
 			GUILayout.Label("<color=green>Activated</color> for: <b>" + Entity.mainPlayer.Name + "</b>", Array.Empty<GUILayoutOption>());
@@ -1145,6 +1164,27 @@ public class AutoAttackTrainer : MonoBehaviour
 		}
 	}
 
+	public static bool IsMouseOverTrainerUI()
+	{
+		if (AutoAttackTrainer.Instance == null || !AutoAttackTrainer.Instance.showMenu)
+		{
+			return false;
+		}
+		Vector2 mp = Input.mousePosition;
+		Vector2 guiPos = new Vector2(mp.x, (float)Screen.height - mp.y);
+		return AutoAttackTrainer.Instance.windowRect.Contains(guiPos);
+	}
+
+	public static bool IsPointOverTrainerUI(Vector2 screenPoint)
+	{
+		if (AutoAttackTrainer.Instance == null || !AutoAttackTrainer.Instance.showMenu)
+		{
+			return false;
+		}
+		Vector2 guiPos = new Vector2(screenPoint.x, (float)Screen.height - screenPoint.y);
+		return AutoAttackTrainer.Instance.windowRect.Contains(guiPos);
+	}
+
 	// Token: 0x04000006 RID: 6
 	public bool autoTarget = false;
 
@@ -1314,19 +1354,102 @@ public static class UIChatActions_UpdateText_Patch
 	}
 }
 
+[HarmonyPatch(typeof(InputManager), "IsPointerOverUI", new Type[] { typeof(Vector2) })]
+public static class InputManager_IsPointerOverUI_Patch
+{
+	[HarmonyPrefix]
+	public static bool Prefix(Vector2 screenPos, ref bool __result)
+	{
+		if (AutoAttackTrainer.IsPointOverTrainerUI(screenPos))
+		{
+			__result = true;
+			return false;
+		}
+		return true;
+	}
+}
+
+[HarmonyPatch(typeof(InputManager), "WorldClickBlockedByUI")]
+public static class InputManager_WorldClickBlockedByUI_Patch
+{
+	[HarmonyPrefix]
+	public static bool Prefix(ref bool __result)
+	{
+		if (AutoAttackTrainer.IsMouseOverTrainerUI())
+		{
+			__result = true;
+			return false;
+		}
+		return true;
+	}
+}
+
+[HarmonyPatch(typeof(TouchWalkController), "BeginWalkAt")]
+public static class TouchWalkController_BeginWalkAt_Patch
+{
+	[HarmonyPrefix]
+	public static bool Prefix(Vector2 screenPoint, ref bool __result)
+	{
+		if (AutoAttackTrainer.IsPointOverTrainerUI(screenPoint))
+		{
+			__result = false;
+			return false;
+		}
+		return true;
+	}
+}
+
+[HarmonyPatch(typeof(TouchWalkController), "UpdateMouseWalk")]
+public static class TouchWalkController_UpdateMouseWalk_Patch
+{
+	[HarmonyPrefix]
+	public static bool Prefix()
+	{
+		if (AutoAttackTrainer.IsMouseOverTrainerUI())
+		{
+			return false;
+		}
+		return true;
+	}
+}
+
+[HarmonyPatch(typeof(DragClickWalk), "OnPointerDown")]
+public static class DragClickWalk_OnPointerDown_Patch
+{
+	[HarmonyPrefix]
+	public static bool Prefix(PointerEventData e)
+	{
+		if (e != null && AutoAttackTrainer.IsPointOverTrainerUI(e.position))
+		{
+			return false;
+		}
+		return true;
+	}
+}
+
+[HarmonyPatch(typeof(DragClickWalk), "OnPointerUp")]
+public static class DragClickWalk_OnPointerUp_Patch
+{
+	[HarmonyPrefix]
+	public static bool Prefix(PointerEventData e)
+	{
+		if (e != null && AutoAttackTrainer.IsPointOverTrainerUI(e.position))
+		{
+			return false;
+		}
+		return true;
+	}
+}
+
 [HarmonyPatch(typeof(ClickableWalk), "OnMouseDown")]
 public static class ClickableWalk_OnMouseDown_Patch
 {
 	[HarmonyPrefix]
 	public static bool Prefix()
 	{
-		if (AutoAttackTrainer.Instance != null && AutoAttackTrainer.Instance.showMenu)
+		if (AutoAttackTrainer.IsMouseOverTrainerUI())
 		{
-			Vector2 guiMousePos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
-			if (AutoAttackTrainer.Instance.windowRect.Contains(guiMousePos))
-			{
-				return false; // Block game action
-			}
+			return false;
 		}
 		return true;
 	}
@@ -1338,13 +1461,9 @@ public static class Targetable_OnMouseDown_Patch
 	[HarmonyPrefix]
 	public static bool Prefix()
 	{
-		if (AutoAttackTrainer.Instance != null && AutoAttackTrainer.Instance.showMenu)
+		if (AutoAttackTrainer.IsMouseOverTrainerUI())
 		{
-			Vector2 guiMousePos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
-			if (AutoAttackTrainer.Instance.windowRect.Contains(guiMousePos))
-			{
-				return false; // Block game action
-			}
+			return false;
 		}
 		return true;
 	}
